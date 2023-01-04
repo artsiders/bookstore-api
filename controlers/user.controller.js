@@ -2,24 +2,33 @@ const User = require('../models/user.model');
 const jwtUtils = require('../utils/jwt.utils');
 
 const maxAge = 86400 * 1000;
-module.exports.get = (_, res) => {
-    User.find().then(
-        (users) => {
-            res.status(200).json({
-                error: false,
-                message: "",
-                data: users
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: true,
-                message: "impossible de d'obtenie les donnée pour le moment",
-                data: []
-            });
-        }
-    );
+module.exports.get = (req, res) => {
+    let user = res.locals.user;
+    if (user) {
+        User.find().then(
+            (users) => {
+                res.status(200).json({
+                    error: false,
+                    message: "",
+                    data: users
+                });
+            }
+        ).catch(
+            (error) => {
+                res.status(400).json({
+                    error: true,
+                    message: "impossible de d'obtenie les donnée pour le moment",
+                    data: []
+                });
+            }
+        );
+    } else {
+        res.status(200).json({
+            error: true,
+            message: "authentification invalide",
+            data: {}
+        });
+    }
 }
 
 module.exports.signIn = (req, res) => {
@@ -71,7 +80,7 @@ module.exports.getOne = (req, res) => {
         }).catch((error) => {
             res.status(400).json({
                 error: true,
-                message: "utilisateur non trouver ! rrzrz",
+                message: "utilisateur non trouver !",
                 data: [],
             });
             console.log(error);
