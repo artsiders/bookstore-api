@@ -1,0 +1,1 @@
+module.exports.replaceAll = (search, replace, text) => text.split(search).join(replace);
