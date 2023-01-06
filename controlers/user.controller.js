@@ -8,7 +8,7 @@ module.exports.get = (req, res) => {
         User.find().then(
             (users) => {
                 res.status(200).json({
-                    error: false,
+                    type: "success",
                     message: "",
                     data: users
                 });
@@ -16,7 +16,7 @@ module.exports.get = (req, res) => {
         ).catch(
             (error) => {
                 res.status(400).json({
-                    error: true,
+                    type: "error",
                     message: "impossible de d'obtenie les donnée pour le moment",
                     data: []
                 });
@@ -24,7 +24,7 @@ module.exports.get = (req, res) => {
         );
     } else {
         res.status(200).json({
-            error: true,
+            type: "success",
             message: "authentification invalide",
             data: {}
         });
@@ -40,8 +40,8 @@ module.exports.signIn = (req, res) => {
                 const token = jwtUtils.generateTokenForUser(users, maxAge);
                 res.cookie("jwt", token)
                 res.status(200).json({
-                    error: false,
-                    message: "",
+                    type: "success",
+                    message: "Connextion réussi !",
                     data: {
                         userId: users._id,
                         email: users.email,
@@ -50,36 +50,49 @@ module.exports.signIn = (req, res) => {
                 });
             } else {
                 res.status(404).json({
-                    error: false,
-                    message: "utilisateur non trouver !",
-                    data: [],
+                    type: "warning",
+                    message: "Email ou Mot de passe incorrect !",
+                    data: {},
                 });
             }
         }).catch((error) => {
             res.status(400).json({
-                error: true,
-                message: "utilisateur non trouver !",
-                data: [],
+                type: "error",
+                message: "une erreur s'est produite! reéssayer plus tard...",
+                data: {},
             });
             console.log(error);
         });
 }
 module.exports.logOut = (req, res) => {
-    res.cookie("jwt", "", { maxAge: 1 })
-    res.redirect("/")
+    try {
+        res.cookie("jwt", "", { maxAge: 1 })
+        res.redirect("/")
+        res.status(200).json({
+            type: "success",
+            message: "Vous étes actuellement déconnecté",
+            data: {},
+        });
+    } catch (error) {
+        res.status(400).json({
+            type: "error",
+            message: "Erreur inattendue. reéssayer plus tard...",
+            data: {},
+        });
+    }
 }
 
 module.exports.getOne = (req, res) => {
     User.findOne({ _id: req.params.id }).then(
         (users) => {
             res.status(200).json({
-                error: false,
+                type: "success",
                 message: "",
                 data: users,
             });
         }).catch((error) => {
             res.status(400).json({
-                error: true,
+                type: "info",
                 message: "utilisateur non trouver !",
                 data: [],
             });
@@ -98,30 +111,26 @@ module.exports.signUp = (req, res, _) => {
 
     User.countDocuments({ email: req.body.email }, function (err, count) {
         if (count > 0) {
-            User.findOne({ email: req.body.email }).then((user) => {
-                res.status(400).json({
-                    error: true,
-                    message: "cette adresse Email a déjà un compte. utiliser une autre adresse ou connecter vous",
-                    data: user,
-                });
-            }
-            )
+            res.status(400).json({
+                type: "warning",
+                message: "cette adresse Email a déjà un compte. utiliser une autre adresse ou connecter vous",
+                data: {},
+            });
         } else {
             users.save().then((user) => {
                 res.status(201).json({
-                    error: false,
-                    message: "utilisateur ajouter avec succès",
-                    data: user,
+                    type: "success",
+                    message: "votre compte a été crée avec succès connecter vous!",
+                    data: user.email,
                 });
-            }
-            ).catch((error) => {
-                res.status(400).json({
-                    error: true,
-                    message: "impossible d'ajouter l'utilisateur",
-                    errors: [error],
+            }).catch((error) => {
+                res.status(500).json({
+                    type: "error",
+                    message: "impossible d'ajouter l'utilisateur. reessayer plus tard...",
+                    data: {},
                 });
-            }
-            );
+                console.log(error);
+            });
         }
     });
 
@@ -131,17 +140,17 @@ module.exports.delete = (req, res) => {
     User.deleteOne({ _id: req.params.id }).then(
         () => {
             res.status(204).json({
-                error: false,
+                type: "success",
                 message: "utilisateur supprimer avec succès",
             });
         }
     ).catch(
         (error) => {
             res.status(400).json({
-                error: true,
+                type: "error",
                 message: "impossible de modifier l'utilisateur",
-                errors: [error]
             });
+            console.log(error);
         }
     );
 }
@@ -160,7 +169,7 @@ module.exports.patch = (req, res) => {
     }).then(
         (value) => {
             res.status(201).json({
-                error: false,
+                type: "success",
                 message: "utilisateur modifier avec succès",
                 data: value,
             });
@@ -168,7 +177,7 @@ module.exports.patch = (req, res) => {
     ).catch(
         (error) => {
             res.status(400).json({
-                error: true,
+                type: "error",
                 message: "impossible de modifier",
                 errors: [error]
             });
