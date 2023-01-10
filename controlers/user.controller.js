@@ -93,12 +93,12 @@ module.exports.signUp = (req, res, _) => {
 module.exports.logOut = (req, res) => {
     try {
         res.cookie("jwt", "", { maxAge: 1 })
-        res.redirect("/")
         res.status(200).json({
             type: "success",
             message: "Vous étes actuellement déconnecté",
             data: {},
         });
+        // res.redirect("/")
     } catch (error) {
         res.status(400).json({
             type: "error",
