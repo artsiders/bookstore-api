@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const userRoute = require('./routes/user.route');
+const specialityRoute = require('./routes/speciality.route');
 
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(cookieParser())
 
 app.use('/users', userRoute);
+app.use('/speciality', specialityRoute);
 
 
 /// mongoose.connect('mongodb+srv://meditation:8vbSf62dopgfgNqL@meditation1.aw8ribq.mongodb.net/?retryWrites=true&w=majority',
