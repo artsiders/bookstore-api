@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const userRoute = require('./routes/user.route');
 const specialityRoute = require('./routes/speciality.route');
+const yearRoute = require('./routes/year.route');
 
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cookieParser())
 
 app.use('/users', userRoute);
 app.use('/speciality', specialityRoute);
+app.use('/year', yearRoute);
 
 
 /// mongoose.connect('mongodb+srv://meditation:8vbSf62dopgfgNqL@meditation1.aw8ribq.mongodb.net/?retryWrites=true&w=majority',

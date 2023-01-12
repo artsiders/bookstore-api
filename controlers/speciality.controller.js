@@ -17,7 +17,7 @@ module.exports.postSpeciality = (req, res, _) => {
     }).catch((error) => {
         res.status(500).json({
             type: "error",
-            message: "impossible d'ajouter l'utilisateur. reessayer plus tard...",
+            message: "impossible d'ajouter. reessayer plus tard...",
             data: {},
         });
         console.log(error);

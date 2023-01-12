@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const specialityControler = require('../controlers/speciality.controller');
-const { checkUser } = require('../middleware/auth.middleware');
 
 
 router.post('/', specialityControler.postSpeciality);
