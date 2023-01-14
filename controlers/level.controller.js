@@ -1,16 +1,17 @@
-const Year = require('../models/year.model');
+const Level = require('../models/level.model');
 
 
-module.exports.postYear = (req, res, _) => {
+module.exports.postLevel = (req, res, _) => {
 
-    const year = new Year({
+    const year = new Level({
         value: req.body.value,
+        level: req.body.level,
     });
 
     year.save().then((_) => {
         res.status(201).json({
             type: "success",
-            message: "année ajouter avec succés",
+            message: "niveau ajouter avec succés",
             data: {},
         });
     }).catch((error) => {
@@ -24,14 +25,13 @@ module.exports.postYear = (req, res, _) => {
 
 }
 
-
-module.exports.getYear = (req, res) => {
-    Year.find().then(
-        (year) => {
+module.exports.getLevel = (req, res) => {
+    Level.find().then(
+        (level) => {
             res.status(200).json({
                 type: "success",
                 message: "",
-                data: year
+                data: level
             });
         }
     ).catch(
@@ -41,6 +41,7 @@ module.exports.getYear = (req, res) => {
                 message: "impossible de d'obtenie les donnée pour le moment",
                 data: []
             });
+            console.log(error);
         }
     );
 }

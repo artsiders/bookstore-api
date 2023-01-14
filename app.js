@@ -6,6 +6,7 @@ const userRoute = require('./routes/user.route');
 const specialityRoute = require('./routes/speciality.route');
 const yearRoute = require('./routes/year.route');
 const bookRoute = require('./routes/book.route');
+const levelRoute = require('./routes/level.route');
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/users', userRoute);
 app.use('/speciality', specialityRoute);
 app.use('/year', yearRoute);
 app.use('/book', bookRoute);
+app.use('/level', levelRoute);
 
 
 /// mongoose.connect('mongodb+srv://meditation:8vbSf62dopgfgNqL@meditation1.aw8ribq.mongodb.net/?retryWrites=true&w=majority',
