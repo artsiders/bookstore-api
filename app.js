@@ -22,6 +22,9 @@ app.use('/year', yearRoute);
 app.use('/book', bookRoute);
 app.use('/level', levelRoute);
 
+// public endpoint for upload files
+app.use('/uploads', express.static('uploads'))
+
 
 /// mongoose.connect('mongodb+srv://meditation:8vbSf62dopgfgNqL@meditation1.aw8ribq.mongodb.net/?retryWrites=true&w=majority',
 mongoose.connect('mongodb://localhost:27017/internship',
