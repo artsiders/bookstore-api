@@ -9,13 +9,13 @@ module.exports.signIn = (req, res) => {
     let email = req.body.email
     let password = req.body.password
 
-    User.findOne({ email: email }).then(
-        (users) => {
+    User.findOne({ email: email })
+        .select("+password")
+        .then((users) => {
             if (users !== null) {
                 bcrypt.compare(password, users.password, (errBcrypt, resBcrypt) => {
                     if (resBcrypt) {
                         const token = jwtUtils.generateTokenForUser(users, maxAge);
-                        res.cookie("jwt", token)
                         res.status(200).json({
                             type: "success",
                             message: "Connextion réussi !",
