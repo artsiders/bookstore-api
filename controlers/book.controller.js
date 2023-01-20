@@ -1,4 +1,8 @@
 const Book = require('../models/book.model');
+const pdf2img = require('pdf-img-convert');
+const fs = require('fs');
+const { join } = require('path');
+const { popExtension } = require('../utils/function.utils');
 
 
 module.exports.getBook = (req, res) => {
@@ -69,9 +73,25 @@ module.exports.getBook = (req, res) => {
 
 
 module.exports.postBook = (req, res) => {
+
+    (async function () {
+        let { filename } = req.file
+        pdfArray = await pdf2img
+            .convert(join(__dirname + '/../uploads/' + filename), {
+                width: 200,
+                page_numbers: [1],
+            });
+        const thumbnail = join(__dirname + "/../uploads/" + popExtension(filename) + "_thumbnail.jpg")
+
+        fs.writeFile(thumbnail, pdfArray[0], (error) => {
+            if (error) console.error("Error: " + error)
+        });
+
+    })();
     const book = new Book({
         theme: req.body.theme,
         fileName: req.file.filename,
+        thumbnail: popExtension(req.file.filename) + "_thumbnail.jpg",
         option: req.body.option,
         niveau: req.body.niveau,
         year: req.body.year,
