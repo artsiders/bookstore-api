@@ -3,8 +3,6 @@ const router = express.Router();
 const bookControler = require('../controlers/book.controller');
 const multer = require('multer')
 const path = require("path")
-const { popExtension } = require('../utils/function.utils');
-
 
 
 let storage = multer.diskStorage({

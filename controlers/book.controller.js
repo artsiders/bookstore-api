@@ -8,7 +8,6 @@ const UPLOAD_DIR = __dirname + "/../uploads/";
 
 
 module.exports.getBook = (req, res) => {
-    console.log(__dirname);
     Book.find().then(
         (books) => {
             res.status(200).json({
@@ -30,7 +29,7 @@ module.exports.getBook = (req, res) => {
 }
 
 
-module.exports.postBook = (req, res) => {
+module.exports.postBook = (req, res, next) => {
     if (!req.Uploaded) {
         return res.status(201).json({
             type: "error",
@@ -44,9 +43,11 @@ module.exports.postBook = (req, res) => {
     const finalName = year + '_' + _idUser + req.extension;
     const thumbnailName = popExtension(finalName) + "_thumbnail.jpg";
 
+    // give corect nanme to the file
     fs.rename(join(UPLOAD_DIR + filename),
         join(UPLOAD_DIR + finalName), (err) => {
             if (!err) {
+                // make a thumbnail if file is corectly rename
                 (async function (finalName) {
                     pdfArray = await pdf2img
                         .convert(join(UPLOAD_DIR + finalName), {
@@ -63,22 +64,62 @@ module.exports.postBook = (req, res) => {
             } else console.log("ERROR: " + err);
 
         })
-    const book = new Book({
-        _idUser: _idUser,
+    Book.findOne({ fileName: finalName }).then(docs => {
+        const isExist = !!docs
+        if (!isExist) {
+            const book = new Book({
+                _idUser: _idUser,
+                theme: theme,
+                fileName: finalName,
+                thumbnail: thumbnailName,
+                option: option,
+                niveau: niveau,
+                year: year,
+                description: description,
+            });
+
+            book.save(book).then(
+                (value) => {
+                    res.status(201).json({
+                        type: "success",
+                        message: "fichier ajouter avec succès",
+                        data: value,
+                    });
+                }
+            ).catch(
+                (error) => {
+                    res.status(400).json({
+                        type: "error",
+                        message: "impossible d'ajouter",
+                        errors: ""
+                    });
+                    console.log(error);
+                }
+            );
+        } else {
+            res.status(400).json({
+                type: "warning",
+                message: "le fichiér existe déja dans la base de donnée.",
+                data: {},
+            });
+        }
+    })
+}
+
+module.exports.patch = (req, res) => {
+    const { theme, description } = req.body
+    const books = new Book({
         theme: theme,
-        fileName: finalName,
-        thumbnail: thumbnailName,
-        option: option,
-        niveau: niveau,
-        year: year,
         description: description,
     });
 
-    book.save(book).then(
+    Book.findOneAndUpdate({ _id: req.params['id'] }, books, {
+        new: true
+    }).then(
         (value) => {
             res.status(201).json({
                 type: "success",
-                message: "fichier ajouter avec succès",
+                message: "utilisateur modifier avec succès",
                 data: value,
             });
         }
@@ -86,10 +127,9 @@ module.exports.postBook = (req, res) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible d'ajouter",
-                errors: ""
+                message: "impossible de modifier",
+                errors: [error]
             });
-            console.log(error);
         }
     );
 }
@@ -127,36 +167,6 @@ module.exports.delete = (req, res) => {
                 message: "impossible de modifier l'utilisateur",
             });
             console.log(error);
-        }
-    );
-}
-
-module.exports.patch = (req, res) => {
-    const books = new book({
-        _id: req.params['id'],
-        fullName: req.body.fullName,
-        email: req.body.email,
-        speciality: req.body.speciality,
-        password: req.body.password,
-    });
-
-    Book.findOneAndUpdate({ _id: req.params['id'] }, books, {
-        new: true
-    }).then(
-        (value) => {
-            res.status(201).json({
-                type: "success",
-                message: "utilisateur modifier avec succès",
-                data: value,
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                type: "error",
-                message: "impossible de modifier",
-                errors: [error]
-            });
         }
     );
 }
