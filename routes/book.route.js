@@ -3,7 +3,6 @@ const router = express.Router();
 const bookControler = require('../controlers/book.controller');
 const multer = require('multer')
 const path = require("path")
-const dayjs = require("dayjs");
 const { popExtension } = require('../utils/function.utils');
 
 
@@ -13,14 +12,19 @@ let storage = multer.diskStorage({
         callback(null, __dirname + '/../uploads/')
     },
     filename: async function (req, file, callback) {
-        let name = file.originalname.split(' ').join('_');
-        name = popExtension(name)
-        let extension = path.extname(file.originalname)
-        name = dayjs().format("YYYY_MM_DD") + '_' + name
-        callback(null, name + extension);
+        req.Uploaded = true
+        try {
+            callback(null, Date.now() + '_' + file.originalname);
+
+            // sent extension file to next()
+            req.extension = path.extname(file.originalname)
+        } catch (error) {
+            req.Uploaded = false
+        }
     }
 });
 let upload = multer({ storage }).single('file');
+
 
 router.post('/', upload, bookControler.postBook);
 

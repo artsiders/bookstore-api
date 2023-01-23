@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Book = require('../models/book.model');
 const jwtUtils = require('../utils/jwt.utils');
 const bcrypt = require('bcrypt');
 
@@ -108,7 +109,7 @@ module.exports.logOut = (req, res) => {
     }
 }
 
-module.exports.get = (req, res) => {
+module.exports.getAll = (req, res) => {
     let user = res.locals.user;
     if (user) {
         User.find().then(
@@ -139,11 +140,15 @@ module.exports.get = (req, res) => {
 
 module.exports.getOne = (req, res) => {
     User.findOne({ _id: req.params.id }).then(
-        (users) => {
+        (user) => {
+            Book.find({ userId: user._id }).then(
+                (books) => {
+                    user.books = books
+                }).catch((error) => console.log(error));
             res.status(200).json({
                 type: "success",
                 message: "",
-                data: users,
+                data: user,
             });
         }).catch((error) => {
             res.status(400).json({

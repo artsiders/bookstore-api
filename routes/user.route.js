@@ -8,7 +8,7 @@ router.post('/sign-up', userControler.signUp);
 router.post('/sign-in', userControler.signIn);
 router.get('/log-out', userControler.logOut);
 
-router.get('/', checkUser, userControler.get);
+router.get('/', checkUser, userControler.getAll);
 
 router.get('/:id', userControler.getOne);
 

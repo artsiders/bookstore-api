@@ -4,11 +4,13 @@ const fs = require('fs');
 const { join } = require('path');
 const { popExtension } = require('../utils/function.utils');
 
+const UPLOAD_DIR = __dirname + "/../uploads/";
+
 
 module.exports.getBook = (req, res) => {
+    console.log(__dirname);
     Book.find().then(
         (books) => {
-            res.sendFile(__dirname + "/uploads/image.jpg")
             res.status(200).json({
                 type: "success",
                 message: "",
@@ -27,75 +29,49 @@ module.exports.getBook = (req, res) => {
     );
 }
 
-// module.exports.post = (req, res) => {
-//     var workbook = XLSX.readFile('./uploads/' + req.file.filename);
-//     var sheetNameList = workbook.SheetNames;
-//     const worksheet = workbook.Sheets[sheetNameList[0]]
-//     const datas = XLSX.utils.sheet_to_json(worksheet)
-
-//     let resultDatas = []
-
-//     const convertToDate = (dateString) => {
-//         // return typeof dateString
-//         if (dateString != undefined) {
-//             try {
-//                 let d = dateString.split("/");
-//                 let dat = new Date(d[2] + '-' + d[1] + '-' + d[0]);
-//                 dat = dayjs(dat).format("YYYY-MM-DD")
-//                 return dat;
-//             } catch (error) {
-//                 return ""
-//             }
-//         }
-//         return ""
-//     }
-
-//     datas.forEach(data => {
-//         data.Date = convertToDate(data.Date)
-//         resultDatas.push(data)
-//     });
-//     Evangile.insertMany(resultDatas).then(() => {
-//         res.status(201).json({
-//             error: false,
-//             message: "Fichier excel importer avec succès !",
-//             data: {},
-//         });
-//     }).catch(error => {
-//         res.status(500).json({
-//             error: true,
-//             message: "Impossible d'importer le fichier",
-//             data: {},
-//         });
-//     })
-
-// }
-
-
 
 module.exports.postBook = (req, res) => {
-
-    (async function () {
-        let { filename } = req.file
-        pdfArray = await pdf2img
-            .convert(join(__dirname + '/../uploads/' + filename), {
-                width: 200,
-                page_numbers: [1],
-            });
-        const thumbnail = join(__dirname + "/../uploads/" + popExtension(filename) + "_thumbnail.jpg")
-
-        fs.writeFile(thumbnail, pdfArray[0], (error) => {
-            if (error) console.error("Error: " + error)
+    if (!req.Uploaded) {
+        return res.status(201).json({
+            type: "error",
+            message: "impossible d'importer les fichier. vérifier les informations et reéssayer",
+            data: {},
         });
+    }
 
-    })();
+    const filename = req.file.filename
+    const { _idUser, theme, option, niveau, year, description } = req.body
+    const finalName = year + '_' + _idUser + req.extension;
+    const thumbnailName = popExtension(finalName) + "_thumbnail.jpg";
+
+    fs.rename(join(UPLOAD_DIR + filename),
+        join(UPLOAD_DIR + finalName), (err) => {
+            if (!err) {
+                (async function (finalName) {
+                    pdfArray = await pdf2img
+                        .convert(join(UPLOAD_DIR + finalName), {
+                            width: 200,
+                            page_numbers: [1],
+                        });
+                    const thumbnail = join(UPLOAD_DIR + thumbnailName)
+
+                    fs.writeFile(thumbnail, pdfArray[0], (error) => {
+                        if (error) console.error("ERROR: " + error)
+                    });
+
+                })(finalName);
+            } else console.log("ERROR: " + err);
+
+        })
     const book = new Book({
-        theme: req.body.theme,
-        fileName: req.file.filename,
-        thumbnail: popExtension(req.file.filename) + "_thumbnail.jpg",
-        option: req.body.option,
-        niveau: req.body.niveau,
-        year: req.body.year,
-        description: req.body.description,
+        _idUser: _idUser,
+        theme: theme,
+        fileName: finalName,
+        thumbnail: thumbnailName,
+        option: option,
+        niveau: niveau,
+        year: year,
+        description: description,
     });
 
     book.save(book).then(
