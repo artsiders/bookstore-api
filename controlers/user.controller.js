@@ -141,15 +141,15 @@ module.exports.getAll = (req, res) => {
 module.exports.getOne = (req, res) => {
     User.findOne({ _id: req.params.id }).then(
         (user) => {
-            Book.find({ userId: user._id }).then(
+            Book.find({ _idUser: user._id }).then(
                 (books) => {
-                    user.books = books
+                    return res.status(200).json({
+                        type: "success",
+                        message: "",
+                        data: { ...user._doc, books },
+                        books: books
+                    });
                 }).catch((error) => console.log(error));
-            res.status(200).json({
-                type: "success",
-                message: "",
-                data: user,
-            });
         }).catch((error) => {
             res.status(400).json({
                 type: "info",
