@@ -3,6 +3,7 @@ const pdf2img = require('pdf-img-convert');
 const fs = require('fs');
 const { join } = require('path');
 const { popExtension } = require('../utils/function.utils');
+const path = require('path');
 
 const UPLOAD_DIR = __dirname + "/../uploads/";
 
@@ -37,20 +38,27 @@ module.exports.postBook = (req, res, next) => {
             data: {},
         });
     }
-
-    const filename = req.file.filename
+    const pdfName = req.files.pdf[0].filename
+    const docxName = req.files.docx[0].filename
     const { _idUser, theme, option, niveau, year, description } = req.body
-    const finalName = year + '_' + _idUser + req.extension;
-    const thumbnailName = popExtension(finalName) + "_thumbnail.jpg";
+    const finalPdfName = year + '_' + _idUser + path.extname(pdfName);
+    const finalDocxName = year + '_' + _idUser + path.extname(docxName);
+    const thumbnailName = popExtension(finalPdfName) + "_thumbnail.jpg";
 
-    // give corect nanme to the file
-    fs.rename(join(UPLOAD_DIR + filename),
-        join(UPLOAD_DIR + finalName), (err) => {
+    // give corect name to the docx file 
+    fs.rename(join(UPLOAD_DIR + docxName),
+        join(UPLOAD_DIR + finalDocxName), (err) => {
+            if (err) console.log(err)
+        })
+
+    // give corect name to the pdf file 
+    fs.rename(join(UPLOAD_DIR + pdfName),
+        join(UPLOAD_DIR + finalPdfName), (err) => {
             if (!err) {
                 // make a thumbnail if file is corectly rename
-                (async function (finalName) {
+                (async function (finalPdfName) {
                     pdfArray = await pdf2img
-                        .convert(join(UPLOAD_DIR + finalName), {
+                        .convert(join(UPLOAD_DIR + finalPdfName), {
                             width: 200,
                             page_numbers: [1],
                         });
@@ -60,17 +68,19 @@ module.exports.postBook = (req, res, next) => {
                         if (error) console.error("ERROR: " + error)
                     });
 
-                })(finalName);
+                })(finalPdfName);
             } else console.log("ERROR: " + err);
 
         })
-    Book.findOne({ fileName: finalName }).then(docs => {
+
+    Book.findOne({ pdfName: finalPdfName }).then(docs => {
         const isExist = !!docs
         if (!isExist) {
             const book = new Book({
                 _idUser: _idUser,
                 theme: theme,
-                fileName: finalName,
+                pdfName: finalPdfName,
+                docxName: finalDocxName,
                 thumbnail: thumbnailName,
                 option: option,
                 niveau: niveau,
