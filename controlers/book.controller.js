@@ -40,7 +40,7 @@ module.exports.postBook = (req, res, next) => {
     }
     const pdfName = req.files.pdf[0].filename
     const docxName = req.files.docx[0].filename
-    const { _idUser, theme, option, niveau, year, description } = req.body
+    const { _idUser, theme, option, level, year, description } = req.body
     const finalPdfName = year + '_' + _idUser + path.extname(pdfName);
     const finalDocxName = year + '_' + _idUser + path.extname(docxName);
     const thumbnailName = popExtension(finalPdfName) + "_thumbnail.jpg";
@@ -83,7 +83,7 @@ module.exports.postBook = (req, res, next) => {
                 docxName: finalDocxName,
                 thumbnail: thumbnailName,
                 option: option,
-                niveau: niveau,
+                level: level,
                 year: year,
                 description: description,
             });
