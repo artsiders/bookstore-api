@@ -45,37 +45,49 @@ module.exports.postBook = (req, res, next) => {
     const finalDocxName = year + '_' + _idUser + path.extname(docxName);
     const thumbnailName = popExtension(finalPdfName) + "_thumbnail.jpg";
 
-    // give corect name to the docx file 
-    fs.rename(join(UPLOAD_DIR + docxName),
-        join(UPLOAD_DIR + finalDocxName), (err) => {
-            if (err) console.log(err)
-        })
-
-    // give corect name to the pdf file 
-    fs.rename(join(UPLOAD_DIR + pdfName),
-        join(UPLOAD_DIR + finalPdfName), (err) => {
-            if (!err) {
-                // make a thumbnail if file is corectly rename
-                (async function (finalPdfName) {
-                    pdfArray = await pdf2img
-                        .convert(join(UPLOAD_DIR + finalPdfName), {
-                            width: 200,
-                            page_numbers: [1],
-                        });
-                    const thumbnail = join(UPLOAD_DIR + thumbnailName)
-
-                    fs.writeFile(thumbnail, pdfArray[0], (error) => {
-                        if (error) console.error("ERROR: " + error)
-                    });
-
-                })(finalPdfName);
-            } else console.log("ERROR: " + err);
-
-        })
-
     Book.findOne({ pdfName: finalPdfName }).then(docs => {
         const isExist = !!docs
-        if (!isExist) {
+        if (isExist) {
+            // delete uload file is already exist in the database
+            fs.unlink(join(UPLOAD_DIR + pdfName), (err) => {
+                if (err) console.log(err)
+            })
+            fs.unlink(join(UPLOAD_DIR + docxName), (err) => {
+                if (err) console.log(err)
+            })
+            return res.status(400).json({
+                type: "warning",
+                message: "le fichiér existe déja dans la base de donnée.",
+                data: {},
+            });
+        } else {
+            // give corect name to the docx file
+            fs.rename(join(UPLOAD_DIR + docxName),
+                join(UPLOAD_DIR + finalDocxName), (err) => {
+                    if (err) console.log(err)
+                })
+
+            // give corect name to the pdf file 
+            fs.rename(join(UPLOAD_DIR + pdfName),
+                join(UPLOAD_DIR + finalPdfName), (err) => {
+                    if (!err) {
+                        // make a thumbnail if file is corectly rename
+                        (async function (finalPdfName) {
+                            pdfArray = await pdf2img
+                                .convert(join(UPLOAD_DIR + finalPdfName), {
+                                    width: 200,
+                                    page_numbers: [1],
+                                });
+                            const thumbnail = join(UPLOAD_DIR + thumbnailName)
+
+                            fs.writeFile(thumbnail, pdfArray[0], (error) => {
+                                if (error) console.error("ERROR: " + error)
+                            });
+
+                        })(finalPdfName);
+                    } else console.log("ERROR: " + err);
+                })
+
             const book = new Book({
                 _idUser: _idUser,
                 theme: theme,
@@ -106,14 +118,9 @@ module.exports.postBook = (req, res, next) => {
                     console.log(error);
                 }
             );
-        } else {
-            res.status(400).json({
-                type: "warning",
-                message: "le fichiér existe déja dans la base de donnée.",
-                data: {},
-            });
         }
     })
+
 }
 
 module.exports.patch = (req, res) => {
