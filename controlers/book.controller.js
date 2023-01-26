@@ -45,6 +45,14 @@ module.exports.postBook = (req, res, next) => {
     const finalDocxName = year + '_' + _idUser + path.extname(docxName);
     const thumbnailName = popExtension(finalPdfName) + "_thumbnail.jpg";
 
+    if ((!!_idUser && !!theme && !!option && !!level && !!year) === false) {
+        return res.status(400).json({
+            type: "warning",
+            message: "vérifiér les données et reéssayer ulterieurement !",
+            data: {},
+        });
+    }
+
     Book.findOne({ pdfName: finalPdfName }).then(docs => {
         const isExist = !!docs
         if (isExist) {
