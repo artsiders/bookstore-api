@@ -68,6 +68,7 @@ module.exports.signUp = (req, res, _) => {
                     fullName: req.body.fullName,
                     email: req.body.email,
                     speciality: req.body.speciality,
+                    level: req.body.level,
                     password: bcryptedPassword,
                 });
 
