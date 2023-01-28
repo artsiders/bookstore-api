@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
     email: { type: String, required: true },
     speciality: { type: String, required: true },
     level: { type: Number, required: true },
+    level_value: { type: String, required: true },
     image: { type: String, required: false },
     password: { type: String, required: true, select: false },
 });

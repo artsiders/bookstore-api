@@ -7,6 +7,7 @@ const bookSchema = mongoose.Schema({
     thumbnail: { type: String, required: true },
     option: { type: String, required: true },
     level: { type: Number, required: true },
+    level_value: { type: String, required: true },
     year: { type: String, required: true },
     _idUser: { type: String, required: true },
     description: { type: String, required: false },
