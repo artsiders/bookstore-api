@@ -1,14 +1,14 @@
-const Speciality = require('../models/speciality.model');
+const Option = require('../models/option.model');
 
 
-module.exports.postSpeciality = (req, res, _) => {
+module.exports.postOption = (req, res, _) => {
 
-    const speciality = new Speciality({
+    const option = new Option({
         value: req.body.value,
         short: req.body.short,
     });
 
-    speciality.save().then((speciality) => {
+    option.save().then((option) => {
         res.status(201).json({
             type: "success",
             message: "specialite ajouter avec succés",
@@ -26,13 +26,13 @@ module.exports.postSpeciality = (req, res, _) => {
 }
 
 
-module.exports.getSpeciality = (req, res) => {
-    Speciality.find().then(
-        (speciality) => {
+module.exports.getOption = (req, res) => {
+    Option.find().then(
+        (option) => {
             res.status(200).json({
                 type: "success",
                 message: "",
-                data: speciality
+                data: option
             });
         }
     ).catch(
@@ -48,11 +48,11 @@ module.exports.getSpeciality = (req, res) => {
 
 module.exports.getOne = (req, res) => {
     User.findOne({ _id: req.params.id }).then(
-        (Speciality) => {
+        (option) => {
             res.status(200).json({
                 type: "success",
                 message: "",
-                data: Speciality,
+                data: option,
             });
         }).catch((error) => {
             res.status(400).json({
@@ -84,15 +84,15 @@ module.exports.delete = (req, res) => {
 }
 
 module.exports.patch = (req, res) => {
-    const Speciality = new User({
+    const Option = new User({
         _id: req.params['id'],
         fullName: req.body.fullName,
         email: req.body.email,
-        speciality: req.body.speciality,
+        Option: req.body.Option,
         password: req.body.password,
     });
 
-    User.findOneAndUpdate({ _id: req.params['id'] }, Speciality, {
+    User.findOneAndUpdate({ _id: req.params['id'] }, Option, {
         new: true
     }).then(
         (value) => {

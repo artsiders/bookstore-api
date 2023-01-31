@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const userRoute = require('./routes/user.route');
-const specialityRoute = require('./routes/speciality.route');
+const optionRoute = require('./routes/option.route');
 const yearRoute = require('./routes/year.route');
 const bookRoute = require('./routes/book.route');
 const levelRoute = require('./routes/level.route');
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(cookieParser())
 
 app.use('/users', userRoute);
-app.use('/speciality', specialityRoute);
+app.use('/option', optionRoute);
 app.use('/year', yearRoute);
 app.use('/book', bookRoute);
 app.use('/level', levelRoute);
