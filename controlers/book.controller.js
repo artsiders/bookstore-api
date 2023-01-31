@@ -10,13 +10,14 @@ const UPLOAD_DIR = __dirname + "/../uploads/";
 
 module.exports.getBook = (req, res) => {
     const year = parseInt(req.query.year)
-    const option = parseInt(req.query.option)
-    const level = parseInt(req.query.level)
+    const option = req.query.option
+    const level_value = req.query.level_value
 
     const reqQuery = {}
     if (year) reqQuery.year = year
     if (option) reqQuery.option = option
-    if (level) reqQuery.level = level
+    if (level_value) reqQuery.level_value = level_value
+
 
     Book.find(reqQuery).limit(10).then(
         (books) => {
