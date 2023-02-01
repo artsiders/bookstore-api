@@ -12,31 +12,39 @@ module.exports.getBook = (req, res) => {
     const year = parseInt(req.query.year)
     const option = req.query.option
     const level_value = req.query.level_value
+    const page = req.query.page
 
-    const reqQuery = {}
+    const reqQuery = { page }
     if (year) reqQuery.year = year
     if (option) reqQuery.option = option
     if (level_value) reqQuery.level_value = level_value
 
+    Book.count(reqQuery)
+        .then(countBook => {
+            const limit = 10
+            const totalPages = Math.ceil(countBook / limit)
+            Book.find(reqQuery).limit(limit).skip((page - 1) * 10).then(
+                (books) => {
+                    res.status(200).json({
+                        type: "success",
+                        message: "",
+                        data: books,
+                        totalPages
+                    });
+                }
+            ).catch(
+                (error) => {
+                    res.status(400).json({
+                        type: "error",
+                        message: "impossible de d'obtenie les donnée pour le moment",
+                        data: []
+                    });
+                    console.log(error);
+                }
+            );
 
-    Book.find(reqQuery).limit(10).then(
-        (books) => {
-            res.status(200).json({
-                type: "success",
-                message: "",
-                data: books
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                type: "error",
-                message: "impossible de d'obtenie les donnée pour le moment",
-                data: []
-            });
-            console.log(error);
-        }
-    );
+        })
+        .catch(err => console.log(err))
 }
 
 
