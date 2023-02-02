@@ -2,6 +2,9 @@ const User = require('../models/user.model');
 const Book = require('../models/book.model');
 const jwtUtils = require('../utils/jwt.utils');
 const bcrypt = require('bcrypt');
+const fs = require("fs")
+const { join, extname } = require('path')
+const UPLOAD_PROFILE_DIR = __dirname + "/../uploads/profile/";
 
 
 const maxAge = 864e5; // un jour
@@ -181,32 +184,38 @@ module.exports.delete = (req, res) => {
     );
 }
 
-module.exports.patch = (req, res) => {
-    const users = new User({
-        _id: req.params['id'],
-        fullName: req.body.fullName,
-        email: req.body.email,
-        speciality: req.body.speciality,
-        password: req.body.password,
-    });
+module.exports.updateImage = (req, res) => {
+    if (req.Uploaded) {
+        const filename = req.file.filename
+        const _id = req.params.id
+        const finalName = _id + extname(filename)
 
-    User.findOneAndUpdate({ _id: req.params['id'] }, users, {
-        new: true
-    }).then(
-        (value) => {
-            res.status(201).json({
-                type: "success",
-                message: "utilisateur modifier avec succès",
-                data: value,
+        fs.rename(join(UPLOAD_PROFILE_DIR + filename),
+            join(UPLOAD_PROFILE_DIR + finalName), (err) => {
+                if (err) return console.log(err)
+            })
+
+        User.findOneAndUpdate({ _id }, { image: finalName })
+            .then(() => {
+                res.status(201).json({
+                    type: "success",
+                    message: "utilisateur modifier avec succès",
+                    data: {},
+                });
+            }).catch((error) => {
+                res.status(400).json({
+                    type: "error",
+                    message: "impossible de modifier",
+                    data: {}
+                });
+                console.log(error);
             });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                type: "error",
-                message: "impossible de modifier",
-                errors: [error]
-            });
-        }
-    );
+    } else {
+        res.status(201).json({
+            type: "warning",
+            message: "impossible d'importer le fichier. verifier et reéssayer !",
+            data: {},
+        });
+    }
+
 }

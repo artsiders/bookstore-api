@@ -3,7 +3,6 @@ const router = express.Router();
 const bookControler = require('../controlers/book.controller');
 const multer = require('multer')
 const { join } = require('path');
-const path = require('path');
 
 
 let storage = multer.diskStorage({
