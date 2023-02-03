@@ -25,8 +25,10 @@ let upload = multer({ storage }).single('file');
 // router.get("*", checkUser)
 router.post('/sign-up', userControler.signUp);
 router.patch('/image/:id', upload, userControler.updateImage);
+router.patch('/contact/:id', userControler.updateContact);
 router.post('/sign-in', userControler.signIn);
-router.get('/log-out', userControler.logOut);
+
+// router.get('/log-out', userControler.logOut);
 
 router.get('/', checkUser, userControler.getAll);
 

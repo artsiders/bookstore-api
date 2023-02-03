@@ -195,6 +195,10 @@ module.exports.updateImage = (req, res) => {
                 if (err) return console.log(err)
             })
 
+        // imageThumbnail(join(UPLOAD_PROFILE_DIR + finalName))
+        //     .then(thumbnail => { console.log(thumbnail) })
+        //     .catch(err => console.error(err));
+
         User.findOneAndUpdate({ _id }, { image: finalName })
             .then(() => {
                 res.status(201).json({
@@ -217,5 +221,26 @@ module.exports.updateImage = (req, res) => {
             data: {},
         });
     }
+
+}
+module.exports.updateContact = (req, res) => {
+    const contact = req.body.contact
+    const _id = req.params.id
+
+    User.findOneAndUpdate({ _id }, { contact })
+        .then(() => {
+            res.status(201).json({
+                type: "success",
+                message: "contact modifier avec succès",
+                data: {},
+            });
+        }).catch((error) => {
+            res.status(400).json({
+                type: "error",
+                message: "impossible de modifier",
+                data: {}
+            });
+            console.log(error);
+        });
 
 }
