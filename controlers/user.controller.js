@@ -57,7 +57,6 @@ module.exports.signIn = (req, res) => {
 
 module.exports.signUp = (req, res, _) => {
 
-
     User.countDocuments({ email: req.body.email }, (err, count) => {
         if (count > 0) {
             res.status(400).json({
@@ -68,7 +67,9 @@ module.exports.signUp = (req, res, _) => {
         } else {
             bcrypt.hash(req.body.password, 5, (err, bcryptedPassword) => {
                 const users = new User({
-                    fullName: req.body.fullName,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    contact: req.body.contact,
                     email: req.body.email,
                     speciality: req.body.speciality,
                     level: req.body.level,
