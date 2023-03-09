@@ -26,11 +26,11 @@ let upload = multer({ storage }).fields([{ name: 'pdf', maxCount: 1 }, { name: '
 
 router.post('/', upload, bookControler.postBook);
 
+router.patch('/:id', upload, bookControler.patchBook);
+
 router.get('/', bookControler.getBook);
 
 router.get('/:id', bookControler.getOne);
-
-router.patch('/:id', bookControler.patch);
 
 router.delete('/:id', bookControler.delete);
 

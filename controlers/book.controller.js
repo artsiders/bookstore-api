@@ -83,7 +83,7 @@ module.exports.postBook = (req, res, next) => {
             })
             return res.status(400).json({
                 type: "warning",
-                message: "le fichiér existe déja dans la base de donnée.",
+                message: "un fichier existe déjà pour ce cyrcle ! vous pouvez le modifier.",
                 data: {},
             });
         } else {
@@ -150,20 +150,84 @@ module.exports.postBook = (req, res, next) => {
 
 }
 
-module.exports.patch = (req, res) => {
-    const { theme, description } = req.body
-    const books = new Book({
-        theme: theme,
-        description: description,
-    });
 
-    Book.findOneAndUpdate({ _id: req.params['id'] }, books, {
+module.exports.patchBook = (req, res, next) => {
+    const { _idUser, theme, option, level, level_value, description, year } = req.body
+
+    let bookDatas = {}
+    const isFile = req.body.isFile //string "true" or "false"
+
+    // si les fichiers doivent aussi etre modifier
+    if (isFile === "true") {
+        // si un des deux fichier manque
+        if (!req.Uploaded) {
+            return res.status(400).json({
+                type: "error",
+                message: "impossible d'importer les fichier. vérifier les informations et reéssayer",
+                data: {},
+            });
+        } else {
+            const pdfName = req.files.pdf[0].filename
+            const docxName = req.files.docx[0].filename
+            const finalPdfName = year + '_' + _idUser + path.extname(pdfName);
+            const finalDocxName = year + '_' + _idUser + path.extname(docxName);
+            const thumbnailName = popExtension(finalPdfName) + "_thumbnail.jpg";
+
+            // give corect name to the docx file
+            fs.rename(join(UPLOAD_DIR + docxName),
+                join(UPLOAD_DIR + finalDocxName), (err) => {
+                    if (err) console.log(err)
+                })
+
+            // give corect name to the pdf file 
+            fs.rename(join(UPLOAD_DIR + pdfName),
+                join(UPLOAD_DIR + finalPdfName), (err) => {
+                    if (!err) {
+                        // make a thumbnail if file is corectly rename
+                        (async function (finalPdfName) {
+                            pdfArray = await pdf2img
+                                .convert(join(UPLOAD_DIR + finalPdfName), {
+                                    width: 200,
+                                    page_numbers: [1],
+                                });
+                            const thumbnail = join(UPLOAD_DIR + thumbnailName)
+
+                            fs.writeFile(thumbnail, pdfArray[0], (error) => {
+                                if (error) console.error("ERROR: " + error)
+                            });
+
+                        })(finalPdfName);
+                    } else console.log("ERROR: " + err);
+                })
+
+            bookDatas = {
+                theme: theme,
+                option: option,
+                level: level,
+                level_value: level_value,
+                description: description,
+                pdfName: finalPdfName,
+                docxName: finalDocxName,
+                thumbnail: thumbnailName
+            };
+        }
+    } else {
+        bookDatas = {
+            theme: theme,
+            option: option,
+            level: level,
+            level_value: level_value,
+            description: description,
+        };
+    }
+
+    Book.findOneAndUpdate({ _id: req.params.id }, bookDatas, {
         new: true
     }).then(
         (value) => {
             res.status(201).json({
                 type: "success",
-                message: "utilisateur modifier avec succès",
+                message: "fichier modifier avec succès",
                 data: value,
             });
         }
@@ -172,11 +236,40 @@ module.exports.patch = (req, res) => {
             res.status(400).json({
                 type: "error",
                 message: "impossible de modifier",
-                errors: [error]
+                errors: ""
             });
+            console.log(error);
         }
     );
 }
+
+// module.exports.patch = (req, res) => {
+//     const { theme, description } = req.body
+//     const books = new Book({
+//         theme: theme,
+//         description: description,
+//     });
+
+//     Book.findOneAndUpdate({ _id: req.params['id'] }, books, {
+//         new: true
+//     }).then(
+//         (value) => {
+//             res.status(201).json({
+//                 type: "success",
+//                 message: "utilisateur modifier avec succès",
+//                 data: value,
+//             });
+//         }
+//     ).catch(
+//         (error) => {
+//             res.status(400).json({
+//                 type: "error",
+//                 message: "impossible de modifier",
+//                 errors: [error]
+//             });
+//         }
+//     );
+// }
 
 module.exports.getOne = (req, res) => {
     Book.findOne({ _id: req.params.id }).then(
