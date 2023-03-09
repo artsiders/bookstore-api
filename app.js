@@ -26,8 +26,8 @@ app.use('/level', levelRoute);
 app.use('/uploads', express.static('uploads'))
 
 
-// mongoose.connect('mongodb://localhost:27017/internship',
-mongoose.connect('mongodb+srv://salim:6eMhaxCPcCRjrtEv@internship.ul4eyde.mongodb.net/?retryWrites=true&w=majority',
+// mongoose.connect('mongodb+srv://salim:6eMhaxCPcCRjrtEv@internship.ul4eyde.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb://localhost:27017/internship',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true

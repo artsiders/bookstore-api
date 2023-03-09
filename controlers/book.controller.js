@@ -83,7 +83,7 @@ module.exports.postBook = (req, res, next) => {
             })
             return res.status(400).json({
                 type: "warning",
-                message: "un fichier existe déjà pour ce cyrcle ! vous pouvez le modifier.",
+                message: "vous ne pouvez pas ajouter deux rapports la même année ! mais vous pouver modifier le rapport actuel.",
                 data: {},
             });
         } else {
