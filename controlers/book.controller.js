@@ -11,13 +11,19 @@ const UPLOAD_DIR = __dirname + "/../uploads/";
 module.exports.getBook = (req, res) => {
     const year = parseInt(req.query.year)
     const option = req.query.option
+    const search = req.query.search
     const level_value = req.query.level_value
     const page = req.query.page
+    let theme = {
+        $regex: search,
+        $options: 'i'
+    };
 
     const reqQuery = { page }
     if (year) reqQuery.year = year
     if (option) reqQuery.option = option
     if (level_value) reqQuery.level_value = level_value
+    if (search !== "tous") reqQuery.theme = theme
 
     Book.count(reqQuery)
         .then(countBook => {
