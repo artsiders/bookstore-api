@@ -10,13 +10,13 @@ module.exports.postYear = (req, res, _) => {
     year.save().then((_) => {
         res.status(201).json({
             type: "success",
-            message: "année ajouter avec succés",
+            message: "Année ajouter avec succés",
             data: {},
         });
     }).catch((error) => {
         res.status(500).json({
             type: "error",
-            message: "impossible d'ajouter. reessayer plus tard...",
+            message: "Impossible d'ajouter. Réessayer plus tard...",
             data: {},
         });
         console.log(error);
@@ -38,7 +38,7 @@ module.exports.getYear = (req, res) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de d'obtenie les donnée pour le moment",
+                message: "Impossible d'obtenir les données pour le moment",
                 data: []
             });
         }

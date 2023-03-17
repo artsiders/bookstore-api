@@ -11,13 +11,13 @@ module.exports.postOption = (req, res, _) => {
     option.save().then((option) => {
         res.status(201).json({
             type: "success",
-            message: "specialite ajouter avec succés",
+            message: "Specialite ajouter avec succés",
             data: {},
         });
     }).catch((error) => {
         res.status(500).json({
             type: "error",
-            message: "impossible d'ajouter. reessayer plus tard...",
+            message: "Impossible d'ajouter. réessayer plus tard...",
             data: {},
         });
         console.log(error);
@@ -39,7 +39,7 @@ module.exports.getOption = (req, res) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de d'obtenie les donnée pour le moment",
+                message: "Impossible d'obtenir les données pour le moment",
                 data: []
             });
         }
@@ -57,7 +57,7 @@ module.exports.getOne = (req, res) => {
         }).catch((error) => {
             res.status(400).json({
                 type: "info",
-                message: "utilisateur non trouver !",
+                message: "Utilisateur non trouver !",
                 data: [],
             });
             console.log(error);
@@ -69,14 +69,14 @@ module.exports.delete = (req, res) => {
         () => {
             res.status(204).json({
                 type: "success",
-                message: "utilisateur supprimer avec succès",
+                message: "Utilisateur supprimer avec succès",
             });
         }
     ).catch(
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de modifier l'utilisateur",
+                message: "Impossible de modifier l'utilisateur",
             });
             console.log(error);
         }
@@ -106,7 +106,7 @@ module.exports.patch = (req, res) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de modifier",
+                message: "Impossible de modifier",
                 errors: [error]
             });
         }

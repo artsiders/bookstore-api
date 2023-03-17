@@ -42,7 +42,7 @@ module.exports.getBook = (req, res) => {
                 (error) => {
                     res.status(400).json({
                         type: "error",
-                        message: "impossible de d'obtenie les donnée pour le moment",
+                        message: "Impossible d'obtenir ces données pour le moment",
                         data: []
                     });
                     console.log(error);
@@ -58,7 +58,7 @@ module.exports.postBook = (req, res, next) => {
     if (!req.Uploaded) {
         return res.status(201).json({
             type: "error",
-            message: "impossible d'importer les fichier. vérifier les informations et reéssayer",
+            message: "Impossible d'importer les fichiers. Vérifier les informations et réessayer",
             data: {},
         });
     }
@@ -72,7 +72,7 @@ module.exports.postBook = (req, res, next) => {
     if ((!!_idUser && !!theme && !!option && !!level && !!year) === false) {
         return res.status(400).json({
             type: "warning",
-            message: "vérifiér les données et reéssayer ulterieurement !",
+            message: "Vérifier les données et réessayer ultérieurement !",
             data: {},
         });
     }
@@ -89,7 +89,7 @@ module.exports.postBook = (req, res, next) => {
             })
             return res.status(400).json({
                 type: "warning",
-                message: "vous ne pouvez pas ajouter deux rapports la même année ! mais vous pouver modifier le rapport actuel.",
+                message: "Vous ne pouvez pas ajouter deux rapports la même année ! Mais vous pouvez modifier le rapport actuel.",
                 data: {},
             });
         } else {
@@ -137,7 +137,7 @@ module.exports.postBook = (req, res, next) => {
                 (value) => {
                     res.status(201).json({
                         type: "success",
-                        message: "fichier ajouter avec succès",
+                        message: "Fichier ajouté avec succès",
                         data: value,
                     });
                 }
@@ -145,7 +145,7 @@ module.exports.postBook = (req, res, next) => {
                 (error) => {
                     res.status(400).json({
                         type: "error",
-                        message: "impossible d'ajouter",
+                        message: "Impossible d'ajouter le fichier",
                         errors: ""
                     });
                     console.log(error);
@@ -169,7 +169,7 @@ module.exports.patchBook = (req, res, next) => {
         if (!req.Uploaded) {
             return res.status(400).json({
                 type: "error",
-                message: "impossible d'importer les fichier. vérifier les informations et reéssayer",
+                message: "Impossible d'importer les fichiers. Vérifier les informations et réessayer",
                 data: {},
             });
         } else {
@@ -233,7 +233,7 @@ module.exports.patchBook = (req, res, next) => {
         (value) => {
             res.status(201).json({
                 type: "success",
-                message: "fichier modifier avec succès",
+                message: "Fichier modifié avec succès",
                 data: value,
             });
         }
@@ -241,7 +241,7 @@ module.exports.patchBook = (req, res, next) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de modifier",
+                message: "Impossible de modifier le fichier",
                 errors: ""
             });
             console.log(error);
@@ -288,7 +288,7 @@ module.exports.getOne = (req, res) => {
         }).catch((error) => {
             res.status(400).json({
                 type: "info",
-                message: "utilisateur non trouver !",
+                message: "Utilisateur introuvable !",
                 data: [],
             });
             console.log(error);
@@ -300,14 +300,14 @@ module.exports.delete = (req, res) => {
         () => {
             res.status(204).json({
                 type: "success",
-                message: "utilisateur supprimer avec succès",
+                message: "Utilisateur supprimé avec succès",
             });
         }
     ).catch(
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de modifier l'utilisateur",
+                message: "Impossible de modifier l'utilisateur",
             });
             console.log(error);
         }

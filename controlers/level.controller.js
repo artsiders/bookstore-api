@@ -11,13 +11,13 @@ module.exports.postLevel = (req, res, _) => {
     year.save().then((_) => {
         res.status(201).json({
             type: "success",
-            message: "niveau ajouter avec succés",
+            message: "Niveau ajouter avec succés",
             data: {},
         });
     }).catch((error) => {
         res.status(500).json({
             type: "error",
-            message: "impossible d'ajouter. reessayer plus tard...",
+            message: "Impossible d'ajouter. Réessayer plus tard...",
             data: {},
         });
         console.log(error);
@@ -38,7 +38,7 @@ module.exports.getLevel = (req, res) => {
         (error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de d'obtenie les donnée pour le moment",
+                message: "Impossible d'obtenir les données pour le moment !",
                 data: []
             });
             console.log(error);

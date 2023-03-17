@@ -22,7 +22,7 @@ module.exports.signIn = (req, res) => {
                         const token = jwtUtils.generateTokenForUser(users, maxAge);
                         res.status(200).json({
                             type: "success",
-                            message: "Connextion réussi !",
+                            message: "Connexion réussi !",
                             data: {
                                 userId: users._id,
                                 email: users.email,
@@ -48,7 +48,7 @@ module.exports.signIn = (req, res) => {
         }).catch((error) => {
             res.status(400).json({
                 type: "error",
-                message: "une erreur s'est produite! reéssayer plus tard...",
+                message: "Une erreur s'est produite! réessayer plus tard...",
                 data: {},
             });
             console.log(error);
@@ -61,7 +61,7 @@ module.exports.signUp = (req, res, _) => {
         if (count > 0) {
             res.status(400).json({
                 type: "warning",
-                message: "cette adresse Email a déjà un compte. utiliser une autre adresse ou connecter vous",
+                message: "Cette adresse email a déjà un compte. Utilisez une autre adresse ou connectez vous",
                 data: {},
             });
         } else {
@@ -80,13 +80,13 @@ module.exports.signUp = (req, res, _) => {
                 users.save().then((user) => {
                     res.status(201).json({
                         type: "success",
-                        message: "votre compte a été crée avec succès connecter vous!",
+                        message: "Votre compte a été crée avec succès. Connectez vous!",
                         data: user.email,
                     });
                 }).catch((error) => {
                     res.status(500).json({
                         type: "error",
-                        message: "impossible d'ajouter l'utilisateur. reessayer plus tard...",
+                        message: "Impossible d'ajouter l'utilisateur. Réessayer plus tard...",
                         data: {},
                     });
                     console.log(error);
@@ -109,7 +109,7 @@ module.exports.logOut = (req, res) => {
     } catch (error) {
         res.status(400).json({
             type: "error",
-            message: "Erreur inattendue. reéssayer plus tard...",
+            message: "Erreur inattendue. réessayer plus tard...",
             data: {},
         });
     }
@@ -130,7 +130,7 @@ module.exports.getAll = (req, res) => {
             (error) => {
                 res.status(400).json({
                     type: "error",
-                    message: "impossible de d'obtenie les donnée pour le moment",
+                    message: "Impossible d'obtenir les données pour le moment",
                     data: []
                 });
             }
@@ -138,7 +138,7 @@ module.exports.getAll = (req, res) => {
     } else {
         res.status(200).json({
             type: "success",
-            message: "authentification invalide",
+            message: "Authentification invalide",
             data: {}
         });
     }
@@ -159,7 +159,7 @@ module.exports.getOne = (req, res) => {
         }).catch((error) => {
             res.status(400).json({
                 type: "info",
-                message: "utilisateur non trouver !",
+                message: "Utilisateur introuvable !",
                 data: [],
             });
             console.log(error);
@@ -204,13 +204,13 @@ module.exports.updateImage = (req, res) => {
             .then(() => {
                 res.status(201).json({
                     type: "success",
-                    message: "utilisateur modifier avec succès",
+                    message: "Informations modifiées avec succès",
                     data: {},
                 });
             }).catch((error) => {
                 res.status(400).json({
                     type: "error",
-                    message: "impossible de modifier",
+                    message: "Impossible de modifier les informations",
                     data: {}
                 });
                 console.log(error);
@@ -218,7 +218,7 @@ module.exports.updateImage = (req, res) => {
     } else {
         res.status(201).json({
             type: "warning",
-            message: "impossible d'importer le fichier. verifier et reéssayer !",
+            message: "Impossible d'importer le fichier. Réessayez !",
             data: {},
         });
     }
@@ -232,13 +232,13 @@ module.exports.updateContact = (req, res) => {
         .then(() => {
             res.status(201).json({
                 type: "success",
-                message: "contact modifier avec succès",
+                message: "Contact modifié avec succès",
                 data: {},
             });
         }).catch((error) => {
             res.status(400).json({
                 type: "error",
-                message: "impossible de modifier",
+                message: "Impossible de modifier le contact",
                 data: {}
             });
             console.log(error);
