@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const Book = require('../models/book.model');
 const jwtUtils = require('../utils/jwt.utils');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const fs = require("fs")
 const { join, extname } = require('path')
 const UPLOAD_PROFILE_DIR = __dirname + "/../uploads/profile/";
