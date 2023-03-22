@@ -24,6 +24,7 @@ let storage = multer.diskStorage({
 let upload = multer({ storage }).single('file');
 // router.get("*", checkUser)
 router.post('/sign-up', userControler.signUp);
+router.patch('/:id', userControler.update);
 router.patch('/image/:id', upload, userControler.updateImage);
 router.patch('/contact/:id', userControler.updateContact);
 router.post('/sign-in', userControler.signIn);

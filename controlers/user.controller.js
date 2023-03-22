@@ -185,6 +185,38 @@ module.exports.delete = (req, res) => {
     );
 }
 
+module.exports.update = (req, res) => {
+    const _id = req.params.id
+    let reqQuery = {}
+
+    const firstname = req.body.firstname
+    const lastname = req.body.lastname
+    const email = req.body.email
+    const contact = req.body.contact
+
+    if (firstname) reqQuery.firstname = firstname
+    if (lastname) reqQuery.lastname = lastname
+    if (email) reqQuery.email = email
+    if (contact) reqQuery.contact = contact
+
+    User.findOneAndUpdate({ _id }, reqQuery)
+        .then(() => {
+            res.status(201).json({
+                type: "success",
+                message: "Information modifié avec succès !",
+                data: {},
+            });
+        }).catch((error) => {
+            res.status(400).json({
+                type: "error",
+                message: "Impossible de modifier les information",
+                data: {}
+            });
+            console.log(error);
+        });
+
+}
+
 module.exports.updateImage = (req, res) => {
     if (req.Uploaded) {
         const filename = req.file.filename
