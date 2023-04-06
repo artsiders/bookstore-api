@@ -1,27 +1,64 @@
 const Option = require('../models/option.model');
+const fs = require("fs")
+const { join, extname } = require('path')
+const UPLOAD_OPTION_DIR = __dirname + "/../uploads/options/";
 
 
 module.exports.postOption = (req, res, _) => {
 
-    const option = new Option({
-        value: req.body.value,
-        short: req.body.short,
-    });
-
-    option.save().then((option) => {
-        res.status(201).json({
-            type: "success",
-            message: "Specialite ajouter avec succés",
-            data: {},
-        });
-    }).catch((error) => {
-        res.status(500).json({
+    if (!req.Uploaded) {
+        return res.status(201).json({
             type: "error",
-            message: "Impossible d'ajouter. réessayer plus tard...",
+            message: "Impossible d'importer les fichiers. Vérifier les informations et réessayer",
             data: {},
         });
-        console.log(error);
-    });
+    }
+
+
+    const value = req.body.value
+    const short = req.body.short
+    const filename = req.file.filename
+    const finalName = short + "_" + value + extname(filename)
+
+    Option.findOne({ short }).then((option) => {
+        if (!option) {
+            fs.rename(join(UPLOAD_OPTION_DIR + filename),
+                join(UPLOAD_OPTION_DIR + finalName.replace(" ", "_")), (err) => {
+                    if (err) return console.log(err)
+                })
+
+            const option = new Option({
+                value,
+                short,
+                image: finalName,
+            });
+
+            option.save().then((option) => {
+                res.status(201).json({
+                    type: "success",
+                    message: "Specialite ajouter avec succés",
+                    data: option,
+                });
+            }).catch((error) => {
+                res.status(500).json({
+                    type: "error",
+                    message: "Impossible d'ajouter. réessayer plus tard...",
+                    data: {},
+                });
+                console.log(error);
+            });
+        } else {
+            fs.unlink(join(UPLOAD_OPTION_DIR + filename), (err) => {
+                if (err) console.log(err)
+            })
+            res.status(400).json({
+                type: "error",
+                message: "Cette spécialité a déjà été ajouter !",
+                data: {},
+            });
+        }
+    }).catch((error) => console.log(error));
+
 
 }
 
