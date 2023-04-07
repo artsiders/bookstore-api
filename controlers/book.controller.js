@@ -13,14 +13,14 @@ module.exports.getBook = (req, res) => {
     const option = req.query.option
     const search = req.query.search
     const level_value = req.query.level_value
-    const page = req.query.page
+    const page = parseInt(req.query.page)
     let theme = {
         $regex: search,
         $options: 'i'
     };
 
-    const reqQuery = { page }
-    if (year) reqQuery.year = year
+    const reqQuery = {}
+    if (year) reqQuery.year = parseInt(year)
     if (option) reqQuery.option = option
     if (level_value) reqQuery.level_value = level_value
     if (search !== "" && search !== "tous") reqQuery.theme = theme
