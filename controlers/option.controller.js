@@ -14,16 +14,15 @@ module.exports.postOption = (req, res, _) => {
         });
     }
 
-
     const value = req.body.value
     const short = req.body.short
-    const filename = req.file.filename
-    const finalName = short + "_" + value + extname(filename)
+    const filename = short + "_" + value + extname(req.file.filename)
+    const finalName = filename.replace(/ /g, "_")
 
     Option.findOne({ short }).then((option) => {
         if (!option) {
-            fs.rename(join(UPLOAD_OPTION_DIR + filename),
-                join(UPLOAD_OPTION_DIR + finalName.replace(" ", "_")), (err) => {
+            fs.rename(join(UPLOAD_OPTION_DIR + req.file.filename),
+                join(UPLOAD_OPTION_DIR + finalName), (err) => {
                     if (err) return console.log(err)
                 })
 
@@ -48,7 +47,7 @@ module.exports.postOption = (req, res, _) => {
                 console.log(error);
             });
         } else {
-            fs.unlink(join(UPLOAD_OPTION_DIR + filename), (err) => {
+            fs.unlink(join(UPLOAD_OPTION_DIR + req.file.filename), (err) => {
                 if (err) console.log(err)
             })
             res.status(400).json({
