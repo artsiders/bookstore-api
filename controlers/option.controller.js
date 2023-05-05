@@ -63,7 +63,7 @@ module.exports.postOption = (req, res, _) => {
 
 
 module.exports.getOption = (req, res) => {
-    Option.find().then(
+    Option.find().sort({ short: 1 }).then(
         (option) => {
             res.status(200).json({
                 type: "success",
