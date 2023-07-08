@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-const Book = require('../models/book.model');
+const Book = require('../models/internship.model');
 const jwtUtils = require('../utils/jwt.utils');
 const bcrypt = require('bcryptjs');
 const fs = require("fs")

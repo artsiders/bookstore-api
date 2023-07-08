@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const bookSchema = mongoose.Schema({
+const internshipSchema = mongoose.Schema({
     theme: { type: String, required: true },
     pdfName: { type: String, required: true, unique: true },
     docxName: { type: String, required: true },
@@ -12,4 +12,4 @@ const bookSchema = mongoose.Schema({
     _idUser: { type: String, required: true },
     description: { type: String, required: false },
 });
-module.exports = mongoose.model('Book', bookSchema);
+module.exports = mongoose.model('InternshipRepport', internshipSchema);

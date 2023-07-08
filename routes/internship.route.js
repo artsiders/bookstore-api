@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bookControler = require('../controlers/book.controller');
+const internshipControler = require('../controlers/internship.controller');
 const multer = require('multer')
 const { join } = require('path');
 
@@ -24,14 +24,14 @@ let storage = multer.diskStorage({
 let upload = multer({ storage }).fields([{ name: 'pdf', maxCount: 1 }, { name: 'docx', maxCount: 1 }]);
 
 
-router.post('/', upload, bookControler.postBook);
+router.post('/', upload, internshipControler.postBook);
 
-router.patch('/:id', upload, bookControler.patchBook);
+router.patch('/:id', upload, internshipControler.patchBook);
 
-router.get('/', bookControler.getBook);
+router.get('/', internshipControler.getBook);
 
-router.get('/:id', bookControler.getOne);
+router.get('/:id', internshipControler.getOne);
 
-router.delete('/:id', bookControler.delete);
+router.delete('/:id', internshipControler.delete);
 
 module.exports = router;

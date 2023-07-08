@@ -1,4 +1,4 @@
-const Book = require('../models/book.model');
+const Book = require('../models/internship.model');
 const pdf2img = require('pdf-img-convert');
 const fs = require('fs');
 const { join } = require('path');
