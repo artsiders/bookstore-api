@@ -6,6 +6,8 @@ const userRoute = require('./routes/user.route');
 const optionRoute = require('./routes/option.route');
 const yearRoute = require('./routes/year.route');
 const internshipRoute = require('./routes/internship.route');
+const supportsRoute = require('./routes/supports.route');
+// const examensRoute = require('./routes/examens.route');
 const levelRoute = require('./routes/level.route');
 // const sharpRoute = require('./routes/sharp.route');
 
@@ -25,8 +27,8 @@ app.use('/option', optionRoute);
 app.use('/year', yearRoute);
 
 app.use('/internship', internshipRoute);
-// app.use('/internship', bookRoute);
-// app.use('/internship', bookRoute);
+app.use('/supports', supportsRoute);
+// app.use('/examens', examensRoute);
 
 app.use('/level', levelRoute);
 // app.use('/sharp', sharpRoute);
