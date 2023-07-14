@@ -41,8 +41,8 @@ app.use('/level', levelRoute);
 app.use('/uploads', express.static('uploads'))
 
 mongoose.set("strictQuery", false);
-// mongoose.connect('mongodb+srv://salim:6eMhaxCPcCRjrtEv@internship.ul4eyde.mongodb.net/?retryWrites=true&w=majority',
-mongoose.connect('mongodb://127.0.0.1:27017/internship',
+mongoose.connect('mongodb+srv://salim:pkn1Ua0SQGXXCtm4@bookstore.b6ts4ul.mongodb.net/?retryWrites=true&w=majority',
+    // mongoose.connect('mongodb://127.0.0.1:27017/internship',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
